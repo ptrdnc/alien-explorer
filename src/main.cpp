@@ -13,6 +13,7 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
+#include <rg/Grass.h>
 
 #include <iostream>
 
@@ -139,11 +140,13 @@ int main() {
     // tell stb_image.h to flip loaded texture's on the y-axis (before loading model).
     stbi_set_flip_vertically_on_load(true);
 
+
     programState = new ProgramState;
     programState->LoadFromFile("resources/program_state.txt");
     if (programState->ImGuiEnabled) {
         glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
     }
+    /*
     // Init Imgui
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
@@ -154,7 +157,7 @@ int main() {
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 330 core");
-
+    */
     // configure global opengl state
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
@@ -167,6 +170,9 @@ int main() {
     // -----------
     Model ourModel("resources/objects/backpack/backpack.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
+
+    Grass grass(20.0f);
+
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -229,9 +235,14 @@ int main() {
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
-        if (programState->ImGuiEnabled)
-            DrawImGui(programState);
+        grass.setup(projection, view, programState->camera.Position);
+        grass.draw();
 
+
+
+        /*if (programState->ImGuiEnabled)
+            DrawImGui(programState);
+        */
 
 
         // glfw: swap buffers and poll IO events (keys pressed/released, mouse moved etc.)
@@ -242,11 +253,14 @@ int main() {
 
     programState->SaveToFile("resources/program_state.txt");
     delete programState;
+    /*
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
     ImGui::DestroyContext();
-    // glfw: terminate, clearing all previously allocated GLFW resources.
+    */
+     // glfw: terminate, clearing all previously allocated GLFW resources.
     // ------------------------------------------------------------------
+
     glfwTerminate();
     return 0;
 }
