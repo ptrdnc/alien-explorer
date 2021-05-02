@@ -13,7 +13,9 @@
 #include <learnopengl/shader.h>
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
+
 #include <rg/Grass.h>
+#include <rg/Lights.h>
 
 #include <iostream>
 
@@ -41,16 +43,6 @@ bool firstMouse = true;
 float deltaTime = 0.0f;
 float lastFrame = 0.0f;
 
-struct PointLight {
-    glm::vec3 position;
-    glm::vec3 ambient;
-    glm::vec3 diffuse;
-    glm::vec3 specular;
-
-    float constant;
-    float linear;
-    float quadratic;
-};
 
 struct ProgramState {
     glm::vec3 clearColor = glm::vec3(0);
@@ -171,13 +163,13 @@ int main() {
     Model ourModel("resources/objects/backpack/backpack.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
 
-    Grass grass(20.0f);
+    Grass grass(1024, 64);
 
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
     pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
-    pointLight.diffuse = glm::vec3(0.6, 0.6, 0.6);
+    pointLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
     pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
 
     pointLight.constant = 1.0f;
@@ -185,6 +177,12 @@ int main() {
     pointLight.quadratic = 0.032f;
 
 
+    DirLight dirLight;
+    dirLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
+    dirLight.diffuse = glm::vec3(0.9f, 0.9f, 0.9f);
+//    dirLight.diffuse = glm::vec3(0.9f, 0.0f, 0.0f);
+    dirLight.specular = glm::vec3(0.9f, 0.9f, 0.9f);
+    dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 0.5f));
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
@@ -220,6 +218,12 @@ int main() {
         ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
+
+        //dirLight
+        ourShader.setVec3("dirLight.ambient", dirLight.ambient);
+        ourShader.setVec3("dirLight.diffuse", dirLight.diffuse);
+        ourShader.setVec3("dirLight.specular", dirLight.specular);
+        ourShader.setVec3("dirLight.direction", dirLight.direction);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
@@ -235,7 +239,7 @@ int main() {
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
-        grass.setup(projection, view, programState->camera.Position);
+        grass.setup(projection, view, programState->camera.Position, dirLight);
         grass.draw();
 
 
