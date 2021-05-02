@@ -163,7 +163,7 @@ int main() {
     Model ourModel("resources/objects/backpack/backpack.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
 
-    Grass grass(1024, 64);
+    Grass grass(1024, 256);
 
 
     PointLight& pointLight = programState->pointLight;
@@ -180,7 +180,7 @@ int main() {
     DirLight dirLight;
     dirLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
     dirLight.diffuse = glm::vec3(0.9f, 0.9f, 0.9f);
-//    dirLight.diffuse = glm::vec3(0.9f, 0.0f, 0.0f);
+    //dirLight.diffuse = glm::vec3(0.9f, 3.0f, 3.0f);
     dirLight.specular = glm::vec3(0.9f, 0.9f, 0.9f);
     dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 0.5f));
 
