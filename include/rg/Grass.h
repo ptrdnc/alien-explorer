@@ -84,7 +84,10 @@ public:
 
         glm::vec3 axis = glm::vec3(1, 0, 0);
         float angle = glm::radians(90.0);
+
         model = glm::rotate(model, angle, axis);
+        glm::vec3 tinyPush = glm::vec3(0.0, 0.0, 0.1);
+        model = glm::translate(model, tinyPush);
 
         diffuseMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-DIFFUSE.jpg");
         specularMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-SPECULAR.jpg");

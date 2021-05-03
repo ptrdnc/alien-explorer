@@ -50,7 +50,7 @@ struct ProgramState {
     Camera camera;
     bool CameraMouseMovementUpdateEnabled = true;
     glm::vec3 backpackPosition = glm::vec3(0.0f);
-    float backpackScale = 1.0f;
+    float backpackScale = 0.01f;
     PointLight pointLight;
     ProgramState()
             : camera(glm::vec3(0.0f, 0.0f, 3.0f)) {}
@@ -160,7 +160,11 @@ int main() {
 
     // load models
     // -----------
-    Model ourModel("resources/objects/backpack/backpack.obj");
+    //Model ourModel("resources/objects/backpack/backpack.obj");
+    //Model ourModel("resources/objects/postwar-city/source/d77c0cc629164202b994da7e203115fc.blend.blend");
+    //Model ourModel("resources/objects/city/source/sketchfabTemp.obj.fbx");
+    //Model ourModel("resources/objects/envcity/Street environment_V01.obj");
+    Model ourModel("resources/objects/futuristic/wild town/wild town.obj");
     ourModel.SetShaderTextureNamePrefix("material.");
 
     Grass grass(1024, 256);
@@ -178,14 +182,23 @@ int main() {
 
 
     DirLight dirLight;
-    dirLight.ambient = glm::vec3(0.2f, 0.2f, 0.2f);
-    dirLight.diffuse = glm::vec3(0.9f, 0.9f, 0.9f);
+    dirLight.ambient = glm::vec3(0.3f, 0.3f, 0.3);
+    dirLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
     //dirLight.diffuse = glm::vec3(0.9f, 3.0f, 3.0f);
-    dirLight.specular = glm::vec3(0.9f, 0.9f, 0.9f);
-    dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 0.5f));
+    dirLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
+
+
+    //dirLight
+    ourShader.use();
+    ourShader.setVec3("dirLight.ambient", dirLight.ambient);
+    ourShader.setVec3("dirLight.diffuse", dirLight.diffuse);
+    ourShader.setVec3("dirLight.specular", dirLight.specular);
+    ourShader.setVec3("dirLight.direction", dirLight.direction);
 
     // draw in wireframe
-    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
+    //
 
     // render loop
     // -----------
@@ -219,11 +232,6 @@ int main() {
         ourShader.setVec3("viewPosition", programState->camera.Position);
         ourShader.setFloat("material.shininess", 32.0f);
 
-        //dirLight
-        ourShader.setVec3("dirLight.ambient", dirLight.ambient);
-        ourShader.setVec3("dirLight.diffuse", dirLight.diffuse);
-        ourShader.setVec3("dirLight.specular", dirLight.specular);
-        ourShader.setVec3("dirLight.direction", dirLight.direction);
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
                                                 (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
