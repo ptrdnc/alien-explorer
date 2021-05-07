@@ -17,7 +17,7 @@
 
 #include <rg/Grass.h>
 #include <rg/Lights.h>
-#include <rg/Cubemaps.h>
+#include <rg/Sky.h>
 
 #include <iostream>
 
@@ -164,11 +164,14 @@ int main() {
 
     // load models
     // -----------
+    //Model ourModel("resources/objects/titan/scene.gltf");
     //Model ourModel("resources/objects/backpack/backpack.obj");
-    //Model ourModel("resources/objects/postwar-city/source/d77c0cc629164202b994da7e203115fc.blend.blend");
-    //Model ourModel("resources/objects/city/source/sketchfabTemp.obj.fbx");
-    //Model ourModel("resources/objects/envcity/Street environment_V01.obj");
     Model ourModel("resources/objects/futuristic/wild town/wild town.obj");
+    //Model ourModel("resources/objects/ufo/scene.gltf");
+    programState->backpackScale = 0.01f;
+
+
+    ourModel.SetShaderTextureNamePrefix("material.");
     ourModel.SetShaderTextureNamePrefix("material.");
 
     Grass grass(1024, 256);
@@ -256,7 +259,8 @@ int main() {
         grass.draw();
 
         sky.setup(projection, view);
-        sky.draw();
+        sky.draw(projection, view);
+
 
 
 

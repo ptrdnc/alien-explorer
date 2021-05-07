@@ -1,0 +1,456 @@
+{
+  "accessors": [
+    {
+      "bufferView": 2,
+      "componentType": 5126,
+      "count": 39508,
+      "max": [
+        0.25292760133743286,
+        0.57988232374191284,
+        0.26948419213294983
+      ],
+      "min": [
+        -0.25076135993003845,
+        -0.55836975574493408,
+        -0.28655573725700378
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 474096,
+      "componentType": 5126,
+      "count": 39508,
+      "max": [
+        0.99999821186065674,
+        0.99969756603240967,
+        0.99989092350006104
+      ],
+      "min": [
+        -0.99987620115280151,
+        -0.99997258186340332,
+        -0.99999713897705078
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "componentType": 5126,
+      "count": 39508,
+      "max": [
+        0.99992692470550537,
+        0.99999946355819702,
+        0.99999147653579712,
+        1
+      ],
+      "min": [
+        -0.99971705675125122,
+        -0.99990105628967285,
+        -0.99966514110565186,
+        -1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 39508,
+      "max": [
+        0.99234247207641602,
+        0.99614888429641724
+      ],
+      "min": [
+        0.0020000000949949026,
+        0.0020000075455754995
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "componentType": 5125,
+      "count": 223872,
+      "max": [
+        39507
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 948192,
+      "componentType": 5126,
+      "count": 36,
+      "max": [
+        0.062019690871238708,
+        -0.39600998163223267,
+        0.072329074144363403
+      ],
+      "min": [
+        -0.058207321912050247,
+        -0.53213238716125488,
+        -0.014482051134109497
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 2,
+      "byteOffset": 948624,
+      "componentType": 5126,
+      "count": 36,
+      "max": [
+        0.98222869634628296,
+        -0.092069670557975769,
+        -0.16355264186859131
+      ],
+      "min": [
+        -0.98222899436950684,
+        -0.28177410364151001,
+        -0.81990200281143188
+      ],
+      "type": "VEC3"
+    },
+    {
+      "bufferView": 3,
+      "byteOffset": 632128,
+      "componentType": 5126,
+      "count": 36,
+      "max": [
+        0.84918028116226196,
+        0.63473618030548096,
+        0.75219047069549561,
+        1
+      ],
+      "min": [
+        0.18357460200786591,
+        -0.65268564224243164,
+        -0.74504435062408447,
+        1
+      ],
+      "type": "VEC4"
+    },
+    {
+      "bufferView": 1,
+      "byteOffset": 316064,
+      "componentType": 5126,
+      "count": 36,
+      "max": [
+        0.98977768421173096,
+        0.3744472861289978
+      ],
+      "min": [
+        0.016537398099899292,
+        0.07980712503194809
+      ],
+      "type": "VEC2"
+    },
+    {
+      "bufferView": 0,
+      "byteOffset": 895488,
+      "componentType": 5125,
+      "count": 102,
+      "max": [
+        35
+      ],
+      "min": [
+        0
+      ],
+      "type": "SCALAR"
+    }
+  ],
+  "asset": {
+    "extras": {
+      "author": "Pedram Ashoori (https://sketchfab.com/pedramashoori)",
+      "license": "CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)",
+      "source": "https://sketchfab.com/models/d1c053c9504c41cd999ff031eedea5e8",
+      "title": "Titan Basilisks"
+    },
+    "generator": "Sketchfab-3.19.6",
+    "version": "2.0"
+  },
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteLength": 895896,
+      "byteOffset": 0,
+      "name": "floatBufferViews",
+      "target": 34963
+    },
+    {
+      "buffer": 0,
+      "byteLength": 316352,
+      "byteOffset": 895896,
+      "byteStride": 8,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 949056,
+      "byteOffset": 1212248,
+      "byteStride": 12,
+      "name": "floatBufferViews",
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteLength": 632704,
+      "byteOffset": 2161304,
+      "byteStride": 16,
+      "name": "floatBufferViews",
+      "target": 34962
+    }
+  ],
+  "buffers": [
+    {
+      "byteLength": 2794008,
+      "uri": "scene.bin"
+    }
+  ],
+  "extensionsRequired": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "extensionsUsed": [
+    "KHR_materials_pbrSpecularGlossiness"
+  ],
+  "images": [
+    {
+      "uri": "textures/01_-_Default_diffuse.png"
+    },
+    {
+      "uri": "textures/default_diffuse.png"
+    },
+    {
+      "uri": "textures/default_specularGlossiness.png"
+    }
+  ],
+  "materials": [
+    {
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseFactor": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "diffuseTexture": {
+            "index": 1,
+            "texCoord": 0
+          },
+          "glossinessFactor": 0.68121189019999995,
+          "specularFactor": [
+            0.26391006099999997,
+            0.26391006099999997,
+            0.26391006099999997
+          ],
+          "specularGlossinessTexture": {
+            "index": 2,
+            "texCoord": 0
+          }
+        }
+      },
+      "name": "default"
+    },
+    {
+      "alphaMode": "BLEND",
+      "doubleSided": true,
+      "extensions": {
+        "KHR_materials_pbrSpecularGlossiness": {
+          "diffuseFactor": [
+            0.38586128050000001,
+            0.38586128050000001,
+            0.38586128050000001,
+            1
+          ],
+          "diffuseTexture": {
+            "index": 0,
+            "texCoord": 0
+          },
+          "glossinessFactor": 0.33365091459999996,
+          "specularFactor": [
+            0.59317835370000005,
+            0.59317835370000005,
+            0.59317835370000005
+          ]
+        }
+      },
+      "name": "01_-_Default"
+    }
+  ],
+  "meshes": [
+    {
+      "name": "homa low poly_default_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 1,
+            "POSITION": 0,
+            "TANGENT": 2,
+            "TEXCOORD_0": 3
+          },
+          "indices": 4,
+          "material": 0,
+          "mode": 4
+        }
+      ]
+    },
+    {
+      "name": "homa low poly_01 - Default_0",
+      "primitives": [
+        {
+          "attributes": {
+            "NORMAL": 6,
+            "POSITION": 5,
+            "TANGENT": 7,
+            "TEXCOORD_0": 8
+          },
+          "indices": 9,
+          "material": 1,
+          "mode": 4
+        }
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "children": [
+        1
+      ],
+      "name": "RootNode (gltf orientation matrix)",
+      "rotation": [
+        -0.70710678118654746,
+        -0,
+        -0,
+        0.70710678118654757
+      ]
+    },
+    {
+      "children": [
+        2
+      ],
+      "name": "RootNode (model correction matrix)"
+    },
+    {
+      "children": [
+        3
+      ],
+      "matrix": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -1,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "name": "8505fab474c0472aa9758de9dec811d6.fbx"
+    },
+    {
+      "children": [
+        4
+      ],
+      "name": "RootNode"
+    },
+    {
+      "children": [
+        5
+      ],
+      "matrix": [
+        275.36349487304688,
+        0,
+        0,
+        0,
+        0,
+        6.1142978429861577e-14,
+        -275.36349487304688,
+        0,
+        0,
+        275.36349487304688,
+        6.1142978429861577e-14,
+        0,
+        -4.6378897877730196e-07,
+        0,
+        0,
+        1
+      ],
+      "name": "homa low poly"
+    },
+    {
+      "children": [
+        6,
+        7
+      ],
+      "matrix": [
+        1,
+        0,
+        -0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        -1.2140233707214065e-08,
+        0.27773618698120117,
+        1
+      ],
+      "name": ""
+    },
+    {
+      "mesh": 0,
+      "name": "homa low poly_default_0"
+    },
+    {
+      "mesh": 1,
+      "name": "homa low poly_01 - Default_0"
+    }
+  ],
+  "samplers": [
+    {
+      "magFilter": 9729,
+      "minFilter": 9987,
+      "wrapS": 10497,
+      "wrapT": 10497
+    }
+  ],
+  "scene": 0,
+  "scenes": [
+    {
+      "name": "OSG_Scene",
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "textures": [
+    {
+      "sampler": 0,
+      "source": 0
+    },
+    {
+      "sampler": 0,
+      "source": 1
+    },
+    {
+      "sampler": 0,
+      "source": 2
+    }
+  ]
+}
+
