@@ -2,6 +2,7 @@
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 
+
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
@@ -16,6 +17,7 @@
 
 #include <rg/Grass.h>
 #include <rg/Lights.h>
+#include <rg/Cubemaps.h>
 
 #include <iostream>
 
@@ -94,6 +96,8 @@ ProgramState *programState;
 
 void DrawImGui(ProgramState *programState);
 
+
+
 int main() {
     // glfw: initialize and configure
     // ------------------------------
@@ -168,6 +172,7 @@ int main() {
     ourModel.SetShaderTextureNamePrefix("material.");
 
     Grass grass(1024, 256);
+    Sky sky;
 
 
     PointLight& pointLight = programState->pointLight;
@@ -249,6 +254,9 @@ int main() {
 
         grass.setup(projection, view, programState->camera.Position, dirLight);
         grass.draw();
+
+        sky.setup(projection, view);
+        sky.draw();
 
 
 
