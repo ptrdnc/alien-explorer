@@ -2,8 +2,8 @@
 // Created by root on 29.4.21..
 //
 
-#ifndef PROJECT_BASE_GRASS_H
-#define PROJECT_BASE_GRASS_H
+#ifndef PROJECT_BASE_TERRAIN_H
+#define PROJECT_BASE_TERRAIN_H
 
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -15,7 +15,7 @@
 #include <rg/Lights.h>
 
 
-class Grass {
+class Terrain {
 public:
 //    float vertices[20] = {
 //            // positions            // texture coords
@@ -37,47 +37,15 @@ public:
     unsigned int shininess = 1;
     float expand = 1.0f;
     float tex = 1.0f;
-    Shader grassShader;
+    Shader terrainShader;
     glm::mat4 model = glm::mat4(1.0f);
 
 
     unsigned int quadVAO = 0;
     unsigned int quadVBO;
 
-    Grass(int expand = 1.0, int tex = 1.0)
-            : grassShader("resources/shaders/grass.vs", "resources/shaders/grass.fs") {
-
-
-
-//        if (expandRatio != 1.0) {
-//            int j;
-//            for (int i = 0; i < 20; i += 5) {
-//                for (int j = 0; j < 3; j++)
-//                    vertices[i+j] *= expandRatio;
-//                vertices[i+3] *= numTextures;
-//                vertices[i+4] *= numTextures;
-//            }
-//
-//        }
-//
-//        glGenVertexArrays(1, &VAO);
-//        glGenBuffers(1, &VBO);
-//        glGenBuffers(1, &EBO);
-//
-//        glBindVertexArray(VAO);
-//
-//
-//        glBindBuffer(GL_ARRAY_BUFFER, VBO);
-//        glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-//
-//        glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-//        glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
-//
-//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) 0);
-//        glEnableVertexAttribArray(0);
-//
-//        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void *) (3 * sizeof(float)));
-//        glEnableVertexAttribArray(1);
+    Terrain(int expand = 1.0, int tex = 1.0)
+            : terrainShader("resources/shaders/terrain.vs", "resources/shaders/terrain.fs") {
 
         this->expand = expand;
         this->tex = tex;
@@ -89,14 +57,24 @@ public:
         glm::vec3 tinyPush = glm::vec3(0.0, 0.0, 0.1);
         model = glm::translate(model, tinyPush);
 
-        diffuseMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-DIFFUSE.jpg");
-        specularMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-SPECULAR.jpg");
-        normalMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-NORMAL.jpg");
+//        diffuseMap = loadTexture("resources/textures/grass/Green-Terrain-Ground-Texture-DIFFUSE.jpg");
+//        specularMap = loadTexture("resources/textures/grass/Green-Terrain-Ground-Texture-SPECULAR.jpg");
+//        normalMap = loadTexture("resources/textures/grass/Green-Terrain-Ground-Texture-NORMAL.jpg");
 
-        grassShader.use();
-        grassShader.setInt("material.texture_diffuse1", GL_TEXTURE0);
-        grassShader.setInt("material.texture_specular1", GL_TEXTURE1);
-        grassShader.setInt("material.texture_normal1", GL_TEXTURE2);
+//        diffuseMap = loadTexture("resources/textures/asphalt/Tileable_Asphalt_Texture.jpg");
+//        specularMap = loadTexture("resources/textures/asphalt/Tileable_Asphalt_Texture_SPECULAR.jpg");
+//        normalMap = loadTexture("resources/textures/asphalt/Tileable_Asphalt_Texture_NORMAL.jpg");
+
+        diffuseMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture.jpg");
+        specularMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture_SPECULAR.jpg");
+        normalMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture_NORMAL.jpg");
+
+
+
+        terrainShader.use();
+        terrainShader.setInt("material.texture_diffuse1", GL_TEXTURE0);
+        terrainShader.setInt("material.texture_specular1", GL_TEXTURE1);
+        terrainShader.setInt("material.texture_normal1", GL_TEXTURE2);
         renderQuad();
 
 
@@ -243,16 +221,16 @@ public:
     }
     void setup(glm::mat4 projection, glm::mat4 view, glm::vec3 viewPos, DirLight dirLight)
     {
-        grassShader.use();
-        grassShader.setMat4("projection", projection);
-        grassShader.setMat4("view", view);
-        grassShader.setMat4("model", model);
-        grassShader.setVec3("viewPos", viewPos);
+        terrainShader.use();
+        terrainShader.setMat4("projection", projection);
+        terrainShader.setMat4("view", view);
+        terrainShader.setMat4("model", model);
+        terrainShader.setVec3("viewPos", viewPos);
 
-        grassShader.setVec3("dirLight.direction", dirLight.direction);
-        grassShader.setVec3("dirLight.diffuse", dirLight.diffuse);
-        grassShader.setVec3("dirLight.ambient", dirLight.ambient);
-        grassShader.setVec3("dirLight.specular", dirLight.specular);
+        terrainShader.setVec3("dirLight.direction", dirLight.direction);
+        terrainShader.setVec3("dirLight.diffuse", dirLight.diffuse);
+        terrainShader.setVec3("dirLight.ambient", dirLight.ambient);
+        terrainShader.setVec3("dirLight.specular", dirLight.specular);
 
 
     }
@@ -282,4 +260,4 @@ public:
 
 
 
-#endif //PROJECT_BASE_GRASS_H
+#endif //PROJECT_BASE_TERRAIN_H

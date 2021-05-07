@@ -61,7 +61,7 @@ public:
     };
     Shader skyShader;
     unsigned int skyboxVAO, skyboxVBO;
-    std::vector<std::string> &activeFaces = nightFaces;
+    std::vector<std::string> &activeFaces = dayFaces;
     glm::mat4 model = glm::mat4(1.0f);
     unsigned int cubemapTexture;
     float skyboxVertices[108] = {

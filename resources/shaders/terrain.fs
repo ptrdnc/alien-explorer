@@ -78,6 +78,8 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 void main()
 {
 
+    bool asphalt = false;
+
     vec3 normal = texture(material.texture_normal1, fs_in.TexCoords).rgb;
     normal = normalize(normal * 2.0 - 1.0);
 
@@ -85,8 +87,10 @@ void main()
 
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
 
-    FragColor = vec4(result, 1.0);
-
+    if (asphalt)
+        FragColor = 0.3 * vec4(result, 1.0);// * vec4(0, 0.352, 0.780, 1.0);
+    else
+        FragColor = vec4(result, 1.0);
 
 }
 

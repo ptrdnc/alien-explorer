@@ -15,7 +15,7 @@
 #include <learnopengl/camera.h>
 #include <learnopengl/model.h>
 
-#include <rg/Grass.h>
+#include <rg/Terrain.h>
 #include <rg/Lights.h>
 #include <rg/Sky.h>
 
@@ -174,7 +174,7 @@ int main() {
     ourModel.SetShaderTextureNamePrefix("material.");
     ourModel.SetShaderTextureNamePrefix("material.");
 
-    Grass grass(1024, 256);
+    Terrain terrain(512, 512);
     Sky sky;
 
 
@@ -191,7 +191,7 @@ int main() {
 
     DirLight dirLight;
     dirLight.ambient = glm::vec3(0.3f, 0.3f, 0.3);
-    dirLight.diffuse = glm::vec3(1.0f, 1.0f, 1.0f);
+    dirLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
     //dirLight.diffuse = glm::vec3(0.9f, 3.0f, 3.0f);
     dirLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
     dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
@@ -255,8 +255,8 @@ int main() {
         ourShader.setMat4("model", model);
         ourModel.Draw(ourShader);
 
-        grass.setup(projection, view, programState->camera.Position, dirLight);
-        grass.draw();
+        terrain.setup(projection, view, programState->camera.Position, dirLight);
+        terrain.draw();
 
         sky.setup(projection, view);
         sky.draw(projection, view);
