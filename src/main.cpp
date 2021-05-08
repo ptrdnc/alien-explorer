@@ -18,6 +18,8 @@
 #include <rg/Terrain.h>
 #include <rg/Lights.h>
 #include <rg/Sky.h>
+#include <rg/City.h>
+#include <rg/Ufo.h>
 
 #include <iostream>
 
@@ -168,14 +170,17 @@ int main() {
     //Model ourModel("resources/objects/backpack/backpack.obj");
     Model ourModel("resources/objects/futuristic/wild town/wild town.obj");
     //Model ourModel("resources/objects/ufo/scene.gltf");
+    //Model ourModel("resources/objects/alien/scene.gltf");
     programState->backpackScale = 0.01f;
 
 
-    ourModel.SetShaderTextureNamePrefix("material.");
-    ourModel.SetShaderTextureNamePrefix("material.");
+
 
     Terrain terrain(512, 512);
     Sky sky;
+    City city;
+    Ufo ufo;
+
 
 
     PointLight& pointLight = programState->pointLight;
@@ -192,17 +197,14 @@ int main() {
     DirLight dirLight;
     dirLight.ambient = glm::vec3(0.3f, 0.3f, 0.3);
     dirLight.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
-    //dirLight.diffuse = glm::vec3(0.9f, 3.0f, 3.0f);
+    //dirLight.diffuse = glm::vec3(0.3f, 0.3f, 0.3f);
+    //dirLight.specular = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
     dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
 
 
     //dirLight
-    ourShader.use();
-    ourShader.setVec3("dirLight.ambient", dirLight.ambient);
-    ourShader.setVec3("dirLight.diffuse", dirLight.diffuse);
-    ourShader.setVec3("dirLight.specular", dirLight.specular);
-    ourShader.setVec3("dirLight.direction", dirLight.direction);
+
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
@@ -228,32 +230,17 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
         // don't forget to enable shader before setting uniforms
-        ourShader.use();
-        pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-        ourShader.setVec3("pointLight.position", pointLight.position);
-        ourShader.setVec3("pointLight.ambient", pointLight.ambient);
-        ourShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-        ourShader.setVec3("pointLight.specular", pointLight.specular);
-        ourShader.setFloat("pointLight.constant", pointLight.constant);
-        ourShader.setFloat("pointLight.linear", pointLight.linear);
-        ourShader.setFloat("pointLight.quadratic", pointLight.quadratic);
-        ourShader.setVec3("viewPosition", programState->camera.Position);
-        ourShader.setFloat("material.shininess", 32.0f);
+
 
         // view/projection transformations
-        glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),
-                                                (float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
+        glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = programState->camera.GetViewMatrix();
-        ourShader.setMat4("projection", projection);
-        ourShader.setMat4("view", view);
 
-        // render the loaded model
-        glm::mat4 model = glm::mat4(1.0f);
-        model = glm::translate(model,
-                               programState->backpackPosition); // translate it down so it's at the center of the scene
-        model = glm::scale(model, glm::vec3(programState->backpackScale));    // it's a bit too big for our scene, so scale it down
-        ourShader.setMat4("model", model);
-        ourModel.Draw(ourShader);
+        city.setup(programState->camera.Position, projection, view, pointLight, dirLight, currentFrame);
+        city.draw();
+
+        ufo.setup(programState->camera.Position, projection, view, pointLight, dirLight, currentFrame);
+        ufo.draw();
 
         terrain.setup(projection, view, programState->camera.Position, dirLight);
         terrain.draw();
@@ -303,6 +290,12 @@ void processInput(GLFWwindow *window) {
         programState->camera.ProcessKeyboard(LEFT, deltaTime);
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
         programState->camera.ProcessKeyboard(RIGHT, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS)
+        programState->camera.ProcessKeyboard(UP, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS)
+        programState->camera.ProcessKeyboard(DOWN, deltaTime);
+    if (glfwGetKey(window, GLFW_KEY_RIGHT_SHIFT) == GLFW_PRESS)
+        programState->camera.ProcessKeyboard(DOWN, deltaTime);
 }
 
 // glfw: whenever the window size changed (by OS or user resize) this callback function executes

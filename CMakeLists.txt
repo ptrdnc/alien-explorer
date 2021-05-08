@@ -42,7 +42,7 @@ include_directories(${CMAKE_BINARY_DIR}/configuration)
 
 include_directories(include/)
 add_executable(${PROJECT_NAME}
-        ${SOURCES} include/rg/Terrain.h include/rg/Lights.h include/rg/Sky.h)
+        ${SOURCES} include/rg/Terrain.h include/rg/Lights.h include/rg/Sky.h include/rg/Ufo.h include/rg/City.h)
 
 target_link_libraries(${PROJECT_NAME} ${LIBS})
 

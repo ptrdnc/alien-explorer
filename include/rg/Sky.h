@@ -43,22 +43,22 @@ public:
 //            "resources/textures/sky/night/front.png",
 //            "resources/textures/sky/night/back.png"
 //    };
-//    std::vector<std::string> nightFaces={
-//            "resources/textures/sky/dusk/front.png",
-//            "resources/textures/sky/dusk/back.png",
-//            "resources/textures/sky/dusk/bottom.png",
-//            "resources/textures/sky/dusk/top.png",
-//            "resources/textures/sky/dusk/right.png",
-//            "resources/textures/sky/dusk/left.png"
-//    };
     std::vector<std::string> nightFaces={
-            "resources/textures/sky/night/front.png",
-            "resources/textures/sky/night/back.png",
-            "resources/textures/sky/night/bottom.png",
-            "resources/textures/sky/night/top.png",
-            "resources/textures/sky/night/right.png",
-            "resources/textures/sky/night/left.png"
+            "resources/textures/sky/dusk/front.png",
+            "resources/textures/sky/dusk/back.png",
+            "resources/textures/sky/dusk/bottom.png",
+            "resources/textures/sky/dusk/top.png",
+            "resources/textures/sky/dusk/right.png",
+            "resources/textures/sky/dusk/left.png"
     };
+//    std::vector<std::string> nightFaces={
+//            "resources/textures/sky/night/front.png",
+//            "resources/textures/sky/night/back.png",
+//            "resources/textures/sky/night/bottom.png",
+//            "resources/textures/sky/night/top.png",
+//            "resources/textures/sky/night/right.png",
+//            "resources/textures/sky/night/left.png"
+//    };
     Shader skyShader;
     unsigned int skyboxVAO, skyboxVBO;
     std::vector<std::string> &activeFaces = dayFaces;

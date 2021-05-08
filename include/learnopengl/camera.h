@@ -12,13 +12,15 @@ enum Camera_Movement {
     FORWARD,
     BACKWARD,
     LEFT,
-    RIGHT
+    RIGHT,
+    UP,
+    DOWN
 };
 
 // Default camera values
 const float YAW         = -90.0f;
 const float PITCH       =  0.0f;
-const float SPEED       =  2.5f;
+const float SPEED       =  5.0f;
 const float SENSITIVITY =  2.0f;
 const float ZOOM        =  45.0f;
 
@@ -33,6 +35,10 @@ public:
     glm::vec3 Up;
     glm::vec3 Right;
     glm::vec3 WorldUp;
+
+    glm::vec3 thirdPersonFront;
+    glm::vec3 thirdPersonRight;
+
     // euler Angles
     float Yaw;
     float Pitch;
@@ -63,7 +69,7 @@ public:
     // returns the view matrix calculated using Euler Angles and the LookAt Matrix
     glm::mat4 GetViewMatrix()
     {
-        return glm::lookAt(Position, Position + Front, Up);
+        return glm::lookAt(Position - Front, Position, Up);
     }
 
     // processes input received from any keyboard-like input system. Accepts input parameter in the form of camera defined ENUM (to abstract it from windowing systems)
@@ -71,13 +77,17 @@ public:
     {
         float velocity = MovementSpeed * deltaTime;
         if (direction == FORWARD)
-            Position += Front * velocity;
+            Position += thirdPersonFront * velocity;
         if (direction == BACKWARD)
-            Position -= Front * velocity;
+            Position -= thirdPersonFront * velocity;
         if (direction == LEFT)
-            Position -= Right * velocity;
+            Position -= thirdPersonRight * velocity;
         if (direction == RIGHT)
-            Position += Right * velocity;
+            Position += thirdPersonRight * velocity;
+        if (direction == UP)
+            Position += WorldUp * velocity;
+        if (direction == DOWN)
+            Position -= WorldUp * velocity;
     }
 
     // processes input received from a mouse input system. Expects the offset value in both the x and y direction.
@@ -125,6 +135,10 @@ private:
         // also re-calculate the Right and Up vector
         Right = glm::normalize(glm::cross(Front, WorldUp));  // normalize the vectors, because their length gets closer to 0 the more you look up or down which results in slower movement.
         Up    = glm::normalize(glm::cross(Right, Front));
+
+        thirdPersonFront = glm::normalize(glm::cross(WorldUp, Right));
+        thirdPersonRight = glm::normalize(glm::cross(Front, WorldUp));
+
     }
 };
 #endif
