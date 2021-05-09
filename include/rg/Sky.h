@@ -130,8 +130,21 @@ public:
         skyShader.setInt("skybox", GL_TEXTURE0);
     };
 
-    void setup(int dayTime)
+    void setup()
     {
+
+        skyShader.use();
+        skyShader.setInt("skybox", GL_TEXTURE0);
+
+    }
+
+    void refresh(int dayTime){
+        if (dayTime == 1)
+            activeFaces = nightFaces;
+        else if (dayTime == 2)
+            activeFaces = duskFaces;
+        else if (dayTime == 3)
+            activeFaces = dayFaces;
 
         glGenVertexArrays(1, &skyboxVAO);
         glGenBuffers(1, &skyboxVBO);
@@ -141,18 +154,11 @@ public:
         glEnableVertexAttribArray(0);
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
-        if(dayTime == 1)
-            activeFaces = dayFaces;
-        else if (dayTime == 2)
-            activeFaces = duskFaces;
-        else
-            activeFaces = nightFaces;
 
         cubemapTexture = loadCubemap(activeFaces);
 
         skyShader.use();
         skyShader.setInt("skybox", GL_TEXTURE0);
-
 
     }
 
