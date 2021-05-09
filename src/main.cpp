@@ -160,28 +160,10 @@ int main() {
     // -----------------------------
     glEnable(GL_DEPTH_TEST);
 
-    // build and compile shaders
-    // -------------------------
-    Shader ourShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs");
-
-    // load models
-    // -----------
-    //Model ourModel("resources/objects/titan/scene.gltf");
-    //Model ourModel("resources/objects/backpack/backpack.obj");
-    Model ourModel("resources/objects/futuristic/wild town/wild town.obj");
-    //Model ourModel("resources/objects/ufo/scene.gltf");
-    //Model ourModel("resources/objects/alien/scene.gltf");
-    programState->backpackScale = 0.01f;
-
-
-
-
     Terrain terrain(512, 512);
     Sky sky;
     City city;
     Ufo ufo;
-
-
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -229,9 +211,6 @@ int main() {
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        // don't forget to enable shader before setting uniforms
-
-
         // view/projection transformations
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = programState->camera.GetViewMatrix();
@@ -247,8 +226,6 @@ int main() {
 
         sky.setup(projection, view);
         sky.draw(projection, view);
-
-
 
 
         /*if (programState->ImGuiEnabled)
