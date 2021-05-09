@@ -99,8 +99,7 @@ ProgramState *programState;
 
 void DrawImGui(ProgramState *programState);
 
-int dayTime = 1;
-bool shouldRefresh = false;
+DayTime dayTime = DAY;
 
 int main() {
     // glfw: initialize and configure
@@ -227,16 +226,9 @@ int main() {
         terrain.setup(projection, view, programState->camera.Position, dirLight);
         terrain.draw();
 
-        if(shouldRefresh){
-            sky.refresh(dayTime);
-            shouldRefresh = false;
-        }
+        //sky.refresh(dayTime);
 
-
-
-
-
-        sky.setup();
+        sky.setup(dayTime);
         sky.draw(projection, view);
 
 
@@ -271,18 +263,13 @@ void processInput(GLFWwindow *window) {
     if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS)
         glfwSetWindowShouldClose(window, true);
 
-    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS){
-        dayTime = 1;
-        shouldRefresh = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS){
-        dayTime = 2;
-        shouldRefresh = true;
-    }
-    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS){
-        dayTime = 3;
-        shouldRefresh = true;
-    }
+    if (glfwGetKey(window, GLFW_KEY_1) == GLFW_PRESS)
+        dayTime = DAY;
+    if (glfwGetKey(window, GLFW_KEY_2) == GLFW_PRESS)
+        dayTime = DUSK;
+    if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
+        dayTime = NIGHT;
+
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
         programState->camera.ProcessKeyboard(FORWARD, deltaTime);

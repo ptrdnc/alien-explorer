@@ -11,12 +11,14 @@
 #ifndef PROJECT_BASE_CUBEMAPS_H
 #define PROJECT_BASE_CUBEMAPS_H
 
-#endif //PROJECT_BASE_CUBEMAPS_H
+enum DayTime {
+    DAY = 0,
+    DUSK,
+    NIGHT
+};
 
 class Sky{
 public:
-
-
 
     std::vector<std::string> dayFaces={
             "resources/textures/sky/day/right.bmp",
@@ -26,14 +28,6 @@ public:
             "resources/textures/sky/day/front.bmp",
             "resources/textures/sky/day/back.bmp"
     };
-//    std::vector<std::string> dayFaces={
-//            "resources/textures/sky/day/right.jpg",
-//            "resources/textures/sky/day/left.jpg",
-//            "resources/textures/sky/day/bottom.jpg",
-//            "resources/textures/sky/day/top.jpg",
-//            "resources/textures/sky/day/front.jpg",
-//            "resources/textures/sky/day/back.jpg"
-//    };
 
 //    std::vector<std::string> nightFaces={
 //            "resources/textures/sky/night/right.png",
@@ -62,8 +56,15 @@ public:
     Shader skyShader;
     unsigned int skyboxVAO, skyboxVBO;
     std::vector<std::string> &activeFaces = dayFaces;
+    DayTime currentTime = DAY;
     glm::mat4 model = glm::mat4(1.0f);
-    unsigned int cubemapTexture;
+    unsigned int cubemapTextures[3] = {
+            loadCubemap(dayFaces),
+            loadCubemap(duskFaces),
+            loadCubemap(nightFaces)
+    };
+    unsigned int activeTexture = cubemapTextures[DAY];
+
     float skyboxVertices[108] = {
             // positions
             -1.0f,  1.0f, -1.0f,
@@ -111,10 +112,6 @@ public:
     Sky()
             : skyShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs") {
 
-//        std::reverse(dayFaces.begin(), dayFaces.end());
-//        std::reverse(nightFaces.begin(), nightFaces.end());
-
-
         glGenVertexArrays(1, &skyboxVAO);
         glGenBuffers(1, &skyboxVBO);
         glBindVertexArray(skyboxVAO);
@@ -124,28 +121,12 @@ public:
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 
-        cubemapTexture = loadCubemap(activeFaces);
-
-        skyShader.use();
-        skyShader.setInt("skybox", GL_TEXTURE0);
+//        skyShader.use();
+//        skyShader.setInt("skybox", GL_TEXTURE0);
     };
 
-    void setup()
+    void setup(DayTime dayTime)
     {
-
-        skyShader.use();
-        skyShader.setInt("skybox", GL_TEXTURE0);
-
-    }
-
-    void refresh(int dayTime){
-        if (dayTime == 1)
-            activeFaces = nightFaces;
-        else if (dayTime == 2)
-            activeFaces = duskFaces;
-        else if (dayTime == 3)
-            activeFaces = dayFaces;
-
         glGenVertexArrays(1, &skyboxVAO);
         glGenBuffers(1, &skyboxVBO);
         glBindVertexArray(skyboxVAO);
@@ -155,12 +136,31 @@ public:
         glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
 
-        cubemapTexture = loadCubemap(activeFaces);
+        activeTexture = cubemapTextures[dayTime];
 
         skyShader.use();
         skyShader.setInt("skybox", GL_TEXTURE0);
 
     }
+
+//    void refresh(DayTime dayTime){
+//
+//
+//        glGenVertexArrays(1, &skyboxVAO);
+//        glGenBuffers(1, &skyboxVBO);
+//        glBindVertexArray(skyboxVAO);
+//        glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+//        glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+//        glEnableVertexAttribArray(0);
+//        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+//
+//
+//        activeTexture = cubemapTextures[dayTime];
+//
+//        skyShader.use();
+//        skyShader.setInt("skybox", GL_TEXTURE0);
+//
+//    }
 
     void draw(glm::mat4 projection, glm::mat4 view){
         glDepthFunc(GL_LEQUAL);  // change depth function so depth test passes when values are equal to depth buffer's content
@@ -180,7 +180,7 @@ public:
         // skybox cube
         glBindVertexArray(skyboxVAO);
         glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_CUBE_MAP, cubemapTexture);
+        glBindTexture(GL_TEXTURE_CUBE_MAP, activeTexture);
         glDrawArrays(GL_TRIANGLES, 0, 36);
         glBindVertexArray(0);
         glDepthMask(GL_TRUE);
@@ -219,3 +219,4 @@ public:
     }
 };
 
+#endif //PROJECT_BASE_CUBEMAPS_H
