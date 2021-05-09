@@ -10,6 +10,7 @@
 #include <glad/glad.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
+#include <rg/LightUfo.h>
 
 class City {
 public:
@@ -27,7 +28,7 @@ City()
 
 }
 void setup(glm::vec3& viewPosition, glm::mat4& projection, glm::mat4& view,
-            PointLight& pointLight, DirLight& dirLight, float currentFrame)
+            PointLight* pointLights, DirLight& dirLight, SpotLight& spotLight, float currentFrame)
 {
 
     cityShader.use();
@@ -37,16 +38,30 @@ void setup(glm::vec3& viewPosition, glm::mat4& projection, glm::mat4& view,
     cityShader.setVec3("dirLight.direction", dirLight.direction);
 
 
-    pointLight.position = glm::vec3(4.0 * cos(currentFrame), 4.0f, 4.0 * sin(currentFrame));
-    cityShader.setVec3("pointLight.position", pointLight.position);
-    cityShader.setVec3("pointLight.ambient", pointLight.ambient);
-    cityShader.setVec3("pointLight.diffuse", pointLight.diffuse);
-    cityShader.setVec3("pointLight.specular", pointLight.specular);
-    cityShader.setFloat("pointLight.constant", pointLight.constant);
-    cityShader.setFloat("pointLight.linear", pointLight.linear);
-    cityShader.setFloat("pointLight.quadratic", pointLight.quadratic);
-    cityShader.setVec3("viewPosition", viewPosition);
-    cityShader.setFloat("material.shininess", 32.0f);
+    for (int i = 0; i < NUM_LIGHT_UFOS; i++) {
+        cityShader.setVec3("pointLights[" + to_string(i) + "].position", pointLights[i].position);
+        cityShader.setVec3("pointLights[" + to_string(i) + "].ambient", pointLights[i].ambient);
+        cityShader.setVec3("pointLights[" + to_string(i) + "].diffuse", pointLights[i].diffuse);
+        cityShader.setVec3("pointLights[" + to_string(i) + "].specular", pointLights[i].specular);
+        cityShader.setFloat("pointLights[" + to_string(i) + "].constant", pointLights[i].constant);
+        cityShader.setFloat("pointLights[" + to_string(i) + "].linear", pointLights[i].linear);
+        cityShader.setFloat("pointLights[" + to_string(i) + "].quadratic", pointLights[i].quadratic);
+        cityShader.setVec3("viewPosition", viewPosition);
+        cityShader.setFloat("material.shininess", 32.0f);
+    }
+
+    cityShader.setVec3("spotLight.position", spotLight.position);
+    cityShader.setVec3("spotLight.direction", spotLight.direction);
+    cityShader.setVec3("spotLight.ambient", spotLight.ambient);
+    cityShader.setVec3("spotLight.diffuse", spotLight.diffuse);
+    cityShader.setVec3("spotLight.specular", spotLight.specular);
+    cityShader.setFloat("spotLight.constant", spotLight.constant);
+    cityShader.setFloat("spotLight.linear", spotLight.linear);
+    cityShader.setFloat("spotLight.quadratic", spotLight.quadratic);
+    cityShader.setFloat("spotLight.cutOff", spotLight.cutOff);
+    cityShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
+
+
 
     cityShader.setMat4("projection", projection);
     cityShader.setMat4("view", view);

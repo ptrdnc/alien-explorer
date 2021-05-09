@@ -1,4 +1,6 @@
 #version 330 core
+#define NUM_LIGHT_UFOS 3
+
 layout (location = 0) in vec3 aPos;
 layout (location = 1) in vec3 aNormal;
 layout (location = 2) in vec2 aTexCoords;
@@ -8,7 +10,9 @@ layout (location = 4) in vec3 aBitangent;
 out VS_OUT {
     vec3 FragPos;
     vec2 TexCoords;
-    vec3 TangentLightDir;
+    vec3 TangentDirLightDir;
+    vec3 TangentSpotLightDir;
+    vec3 TangentSpotLightPosition;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
 } vs_out;
@@ -19,8 +23,33 @@ struct DirLight {
     vec3 diffuse;
     vec3 specular;
 };
-uniform DirLight dirLight;
+struct PointLight {
+    vec3 position;
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
 
+    float constant;
+    float linear;
+    float quadratic;
+};
+struct SpotLight {
+    vec3 position;
+    vec3 direction;
+    float cutOff;
+    float outerCutOff;
+
+    float constant;
+    float linear;
+    float quadratic;
+
+    vec3 ambient;
+    vec3 diffuse;
+    vec3 specular;
+};
+uniform DirLight dirLight;
+uniform SpotLight spotLight;
+uniform PointLight pointLights[NUM_LIGHT_UFOS];
 uniform mat4 model;
 uniform mat4 view;
 uniform mat4 projection;
@@ -39,10 +68,11 @@ void main()
     vec3 B = cross(N, T);
 
     mat3 TBN = transpose(mat3(T, B, N));
-    vs_out.TangentLightDir = TBN * dirLight.direction;
+    vs_out.TangentDirLightDir = TBN * dirLight.direction;
     vs_out.TangentViewPos = TBN * viewPos;
     vs_out.TangentFragPos = TBN * vs_out.FragPos;
-
+    vs_out.TangentSpotLightDir = TBN * spotLight.direction;
+    vs_out.TangentSpotLightPosition = TBN * spotLight.position;
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 
 }

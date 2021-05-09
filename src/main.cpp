@@ -100,7 +100,7 @@ ProgramState *programState;
 void DrawImGui(ProgramState *programState);
 
 DayTime dayTime = DAY;
-
+bool spotLightOn = true;
 int main() {
     // glfw: initialize and configure
     // ------------------------------
@@ -166,21 +166,24 @@ int main() {
     City city;
     Ufo ufo;
     vector<LightUfo> lightUfos = {
-            LightUfo(glm::vec3(1.0f, 0.0f, 0.0f), UFORADIUS, glm::radians(0.0f)),
-            LightUfo(glm::vec3(0.0f, 1.0f, 0.0f), UFORADIUS, glm::radians(120.0f)),
-            LightUfo(glm::vec3(0.0f, 0.0f, 1.0f), UFORADIUS, glm::radians(240.0f))
+            LightUfo(glm::vec3(1.0f, 0.0f, 0.0f), UFO_RADIUS, glm::radians(0.0f)),
+            LightUfo(glm::vec3(0.0f, 1.0f, 0.0f), UFO_RADIUS, glm::radians(120.0f)),
+            LightUfo(glm::vec3(0.0f, 0.0f, 1.0f), UFO_RADIUS, glm::radians(240.0f))
     };
 
-    PointLight& pointLight = programState->pointLight;
-    pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
-    pointLight.ambient = glm::vec3(0.1, 0.1, 0.1);
-    pointLight.diffuse = glm::vec3(1.0, 1.0, 1.0);
-    pointLight.specular = glm::vec3(1.0, 1.0, 1.0);
+    PointLight pointLights[NUM_LIGHT_UFOS];
+    for (int i = 0; i < NUM_LIGHT_UFOS; i++){
+        pointLights[i] = {
+                .position = lightUfos[i].position,
+                .ambient = 0.2f * lightUfos[i].color,
+                .diffuse = lightUfos[i].color,
+                .specular = lightUfos[i].color,
+                .constant = 1.0f,
+                .linear = 0.09f,
+                .quadratic = 0.032f
+        };
 
-    pointLight.constant = 1.0f;
-    pointLight.linear = 0.09f;
-    pointLight.quadratic = 0.032f;
-
+    }
 
     DirLight day, dusk, night;
     day.ambient = glm::vec3(0.3f, 0.3f, 0.3f);
@@ -200,6 +203,34 @@ int main() {
 
     std::vector<DirLight> dirLights = { day, dusk, night };
 
+    SpotLight spotLightFull = {
+            .position = ufo.ufoPosition,
+            .direction = glm::vec3(0.0, -1.0, 0.0),
+            .cutOff = glm::cos(glm::radians(0.8f)),
+            .outerCutOff = glm::cos(glm::radians(1.0f)),
+            .constant = 1.0f,
+            .linear = 0.09f,
+            .quadratic = 0.032f,
+            .ambient = glm::vec3(0.2f, 0.2f, 0.2f),
+            .diffuse = glm::vec3(1.0f, 1.0f, 1.0f),
+            .specular = glm::vec3(1.0f, 1.0f, 1.0f)
+    };
+    //0.014	0.0007
+    SpotLight spotLightDimmed = {
+            .position = ufo.ufoPosition,
+            .direction = glm::vec3(0.0, -1.0, 0.0),
+            .cutOff = glm::cos(glm::radians(12.5f)),
+            .outerCutOff = glm::cos(glm::radians(15.0f)),
+            .constant = 1.0f,
+            .linear = 0.9,
+            .quadratic = 8,
+            .ambient = glm::vec3(0.0f, 0.0f, 0.0f),
+            .diffuse = glm::vec3(0.0f, 0.0f, 0.0f),
+            .specular = glm::vec3(0.0f, 0.0f, 0.0f)
+    };
+    //1.0	0.7	1.8
+
+    SpotLight spotLight = spotLightFull;
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
     //
@@ -219,8 +250,6 @@ int main() {
         // -----
         processInput(window);
 
-
-
         // render
         // ------
         glClearColor(programState->clearColor.r, programState->clearColor.g, programState->clearColor.b, 1.0f);
@@ -230,23 +259,29 @@ int main() {
         glm::mat4 projection = glm::perspective(glm::radians(programState->camera.Zoom),(float) SCR_WIDTH / (float) SCR_HEIGHT, 0.1f, 100.0f);
         glm::mat4 view = programState->camera.GetViewMatrix();
 
-        city.setup(programState->camera.Position, projection, view, pointLight, dirLights[dayTime], currentFrame);
+        if (spotLightOn)
+            spotLight = spotLightFull;
+        else
+            spotLight = spotLightDimmed;
+
+        spotLight.position = ufo.ufoPosition;
+
+        city.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
         city.draw();
 
-        ufo.setup(programState->camera.Position, projection, view, pointLight, dirLights[dayTime], currentFrame);
+        ufo.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
         ufo.draw();
 
-        for (int i = 0; i < NUMUFOS; i++) {
-            lightUfos[i].setup(programState->camera.Position, projection, view, pointLight, dirLights[dayTime], currentFrame);
+        for (int i = 0; i < NUM_LIGHT_UFOS; i++) {
+            lightUfos[i].setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
             lightUfos[i].draw();
+
+            pointLights[i].position = lightUfos[i].position;
         }
 
 
-
-        terrain.setup(projection, view, programState->camera.Position, dirLights[dayTime]);
+        terrain.setup(projection, view, programState->camera.Position, pointLights, dirLights[dayTime], spotLight);
         terrain.draw();
-
-        //sky.refresh(dayTime);
 
         sky.setup(dayTime);
         sky.draw(projection, view);
@@ -289,6 +324,12 @@ void processInput(GLFWwindow *window) {
         dayTime = DUSK;
     if (glfwGetKey(window, GLFW_KEY_3) == GLFW_PRESS)
         dayTime = NIGHT;
+
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
+        spotLightOn = true;
+
+    if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
+        spotLightOn = false;
 
 
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)

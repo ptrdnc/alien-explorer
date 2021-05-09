@@ -13,7 +13,7 @@
 #include <rg/Error.h>
 
 #include <rg/Lights.h>
-
+#include <rg/LightUfo.h>
 
 class Terrain {
 public:
@@ -79,7 +79,63 @@ public:
 
 
     }
+    void setup(glm::mat4 projection, glm::mat4 view, glm::vec3 viewPosition, PointLight* pointLights, DirLight dirLight, SpotLight spotLight)
+    {
+        terrainShader.use();
+        terrainShader.setMat4("projection", projection);
+        terrainShader.setMat4("view", view);
+        terrainShader.setMat4("model", model);
+        terrainShader.setVec3("viewPos", viewPosition);
 
+        terrainShader.setVec3("dirLight.direction", dirLight.direction);
+        terrainShader.setVec3("dirLight.diffuse", dirLight.diffuse);
+        terrainShader.setVec3("dirLight.ambient", dirLight.ambient);
+        terrainShader.setVec3("dirLight.specular", dirLight.specular);
+        terrainShader.setFloat("material.shininess", 0.0f);
+        for (int i = 0; i < NUM_LIGHT_UFOS; i++) {
+            terrainShader.setVec3("pointLights[" + to_string(i) + "].position", pointLights[i].position);
+            terrainShader.setVec3("pointLights[" + to_string(i) + "].ambient", pointLights[i].ambient);
+            terrainShader.setVec3("pointLights[" + to_string(i) + "].diffuse", pointLights[i].diffuse);
+            terrainShader.setVec3("pointLights[" + to_string(i) + "].specular", pointLights[i].specular);
+            terrainShader.setFloat("pointLights[" + to_string(i) + "].constant", pointLights[i].constant);
+            terrainShader.setFloat("pointLights[" + to_string(i) + "].linear", pointLights[i].linear);
+            terrainShader.setFloat("pointLights[" + to_string(i) + "].quadratic", pointLights[i].quadratic);
+
+        }
+
+        terrainShader.setVec3("spotLight.position", spotLight.position);
+        terrainShader.setVec3("spotLight.direction", spotLight.direction);
+        terrainShader.setVec3("spotLight.ambient", spotLight.ambient);
+        terrainShader.setVec3("spotLight.diffuse", spotLight.diffuse);
+        terrainShader.setVec3("spotLight.specular", spotLight.specular);
+        terrainShader.setFloat("spotLight.constant", spotLight.constant);
+        terrainShader.setFloat("spotLight.linear", spotLight.linear);
+        terrainShader.setFloat("spotLight.quadratic", spotLight.quadratic);
+        terrainShader.setFloat("spotLight.cutOff", spotLight.cutOff);
+        terrainShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
+
+
+
+    }
+    void draw()
+    {
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, diffuseMap);
+
+        glActiveTexture(GL_TEXTURE1);
+        glBindTexture(GL_TEXTURE_2D, specularMap);
+
+        glActiveTexture(GL_TEXTURE2);
+        glBindTexture(GL_TEXTURE_2D, normalMap);
+
+//        glBindVertexArray(VAO);
+//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+//        glBindVertexArray(0);
+
+        glBindVertexArray(quadVAO);
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glBindVertexArray(0);
+    }
     unsigned int loadTexture(const char *filename) {
 
         unsigned int textureID;
@@ -219,40 +275,7 @@ public:
             glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, 14 * sizeof(float), (void *) (11 * sizeof(float)));
         }
     }
-    void setup(glm::mat4 projection, glm::mat4 view, glm::vec3 viewPos, DirLight dirLight)
-    {
-        terrainShader.use();
-        terrainShader.setMat4("projection", projection);
-        terrainShader.setMat4("view", view);
-        terrainShader.setMat4("model", model);
-        terrainShader.setVec3("viewPos", viewPos);
 
-        terrainShader.setVec3("dirLight.direction", dirLight.direction);
-        terrainShader.setVec3("dirLight.diffuse", dirLight.diffuse);
-        terrainShader.setVec3("dirLight.ambient", dirLight.ambient);
-        terrainShader.setVec3("dirLight.specular", dirLight.specular);
-
-
-    }
-    void draw()
-    {
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, diffuseMap);
-
-        glActiveTexture(GL_TEXTURE1);
-        glBindTexture(GL_TEXTURE_2D, specularMap);
-
-        glActiveTexture(GL_TEXTURE2);
-        glBindTexture(GL_TEXTURE_2D, normalMap);
-
-//        glBindVertexArray(VAO);
-//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//        glBindVertexArray(0);
-
-        glBindVertexArray(quadVAO);
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-        glBindVertexArray(0);
-    }
 
 };
 

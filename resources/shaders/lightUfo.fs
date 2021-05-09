@@ -1,6 +1,6 @@
 #version 330 core
 out vec4 FragColor;
-
+#define NUM_LIGHT_UFOS (3)
 struct PointLight {
     vec3 position;
 
@@ -31,7 +31,7 @@ struct DirLight {
     vec3 specular;
 };
 uniform DirLight dirLight;
-uniform PointLight pointLight;
+uniform PointLight pointLights[NUM_LIGHT_UFOS];
 uniform Material material;
 uniform vec3 color;
 uniform vec3 viewPosition;
@@ -79,8 +79,9 @@ void main()
 {
     vec3 normal = normalize(Normal);
     vec3 viewDir = normalize(viewPosition - FragPos);
-    vec3 result = CalcPointLight(pointLight, normal, FragPos, viewDir);
-    result += CalcDirLight(dirLight, normal, viewDir);
+    vec3 result = CalcDirLight(dirLight, normal, viewDir);
+        for(int i = 0; i < NUM_LIGHT_UFOS; i++)
+            result += CalcPointLight(pointLights[i], normal, FragPos, viewDir);
 
     FragColor = vec4(expMean(color, result, 0.66), 1.0);
 }
