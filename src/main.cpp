@@ -20,6 +20,7 @@
 #include <rg/Sky.h>
 #include <rg/City.h>
 #include <rg/Ufo.h>
+#include <rg/LightUfo.h>
 
 #include <iostream>
 
@@ -164,6 +165,7 @@ int main() {
     Sky sky;
     City city;
     Ufo ufo;
+    LightUfo lightUfo(glm::vec3(1.0, 0.0, 0.0), 32.0f, 10.0f);
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -183,9 +185,6 @@ int main() {
     //dirLight.specular = glm::vec3(0.1f, 0.1f, 0.1f);
     dirLight.specular = glm::vec3(1.0f, 1.0f, 1.0f);
     dirLight.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
-
-
-    //dirLight
 
 
     // draw in wireframe
@@ -220,6 +219,9 @@ int main() {
 
         ufo.setup(programState->camera.Position, projection, view, pointLight, dirLight, currentFrame);
         ufo.draw();
+
+        lightUfo.setup(programState->camera.Position, projection, view, pointLight, dirLight, currentFrame);
+        lightUfo.draw();
 
         terrain.setup(projection, view, programState->camera.Position, dirLight);
         terrain.draw();
