@@ -15,7 +15,7 @@
 
 class Sky{
 public:
-    bool isDay = true;
+
 
 
     std::vector<std::string> dayFaces={
@@ -43,7 +43,7 @@ public:
 //            "resources/textures/sky/night/front.png",
 //            "resources/textures/sky/night/back.png"
 //    };
-    std::vector<std::string> nightFaces={
+    std::vector<std::string> duskFaces={
             "resources/textures/sky/dusk/front.png",
             "resources/textures/sky/dusk/back.png",
             "resources/textures/sky/dusk/bottom.png",
@@ -51,14 +51,14 @@ public:
             "resources/textures/sky/dusk/right.png",
             "resources/textures/sky/dusk/left.png"
     };
-//    std::vector<std::string> nightFaces={
-//            "resources/textures/sky/night/front.png",
-//            "resources/textures/sky/night/back.png",
-//            "resources/textures/sky/night/bottom.png",
-//            "resources/textures/sky/night/top.png",
-//            "resources/textures/sky/night/right.png",
-//            "resources/textures/sky/night/left.png"
-//    };
+    std::vector<std::string> nightFaces={
+            "resources/textures/sky/night/front.png",
+            "resources/textures/sky/night/back.png",
+            "resources/textures/sky/night/bottom.png",
+            "resources/textures/sky/night/top.png",
+            "resources/textures/sky/night/right.png",
+            "resources/textures/sky/night/left.png"
+    };
     Shader skyShader;
     unsigned int skyboxVAO, skyboxVBO;
     std::vector<std::string> &activeFaces = dayFaces;
@@ -109,7 +109,7 @@ public:
             1.0f, -1.0f,  1.0f
     };
     Sky()
-    : skyShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs") {
+            : skyShader("resources/shaders/skybox.vs", "resources/shaders/skybox.fs") {
 
 //        std::reverse(dayFaces.begin(), dayFaces.end());
 //        std::reverse(nightFaces.begin(), nightFaces.end());
@@ -130,15 +130,29 @@ public:
         skyShader.setInt("skybox", GL_TEXTURE0);
     };
 
-    void setup(glm::mat4 projection, glm::mat4 view)
+    void setup(int dayTime)
     {
-//        for(int i = 0; i < sizeof(skyboxVertices)/sizeof(float); i++){
-//            skyboxVertices[i] *= 80;
-//        }
-//
-//        skyShader.use();
-//        skyShader.setMat4("projection", projection);
-//        skyShader.setMat4("view", view);
+
+        glGenVertexArrays(1, &skyboxVAO);
+        glGenBuffers(1, &skyboxVBO);
+        glBindVertexArray(skyboxVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, skyboxVBO);
+        glBufferData(GL_ARRAY_BUFFER, sizeof(skyboxVertices), &skyboxVertices, GL_STATIC_DRAW);
+        glEnableVertexAttribArray(0);
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+        if(dayTime == 1)
+            activeFaces = dayFaces;
+        else if (dayTime == 2)
+            activeFaces = duskFaces;
+        else
+            activeFaces = nightFaces;
+
+        cubemapTexture = loadCubemap(activeFaces);
+
+        skyShader.use();
+        skyShader.setInt("skybox", GL_TEXTURE0);
+
 
     }
 
