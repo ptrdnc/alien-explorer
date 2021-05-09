@@ -71,11 +71,16 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 
 }
 
+vec3 expMean(vec3 color1, vec3 color2, float alpha){
+    return (1-alpha) * color1 + alpha * color2;
+}
+
 void main()
 {
     vec3 normal = normalize(Normal);
     vec3 viewDir = normalize(viewPosition - FragPos);
     vec3 result = CalcPointLight(pointLight, normal, FragPos, viewDir);
     result += CalcDirLight(dirLight, normal, viewDir);
-    FragColor = vec4(result * color, 1.0);
+
+    FragColor = vec4(expMean(color, result, 0.66), 1.0);
 }

@@ -165,7 +165,11 @@ int main() {
     Sky sky;
     City city;
     Ufo ufo;
-    LightUfo lightUfo(glm::vec3(1.0, 0.0, 0.0), 32.0f, 10.0f);
+    vector<LightUfo> lightUfos = {
+            LightUfo(glm::vec3(1.0f, 0.0f, 0.0f), UFORADIUS, glm::radians(0.0f)),
+            LightUfo(glm::vec3(0.0f, 1.0f, 0.0f), UFORADIUS, glm::radians(120.0f)),
+            LightUfo(glm::vec3(0.0f, 0.0f, 1.0f), UFORADIUS, glm::radians(240.0f))
+    };
 
     PointLight& pointLight = programState->pointLight;
     pointLight.position = glm::vec3(4.0f, 4.0, 0.0);
@@ -178,25 +182,23 @@ int main() {
     pointLight.quadratic = 0.032f;
 
 
-    DirLight dan,vece,noc;
-    dan.ambient = glm::vec3(0.3f, 0.3f, 0.3f);
-    dan.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
-    //tmp.diffuse = glm::vec3(0.3f, 0.3f, 0.3f);
-    //tmp.specular = glm::vec3(0.1f, 0.1f, 0.1f);
-    dan.specular = glm::vec3(1.0f, 1.0f, 1.0f);
-    dan.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
+    DirLight day, dusk, night;
+    day.ambient = glm::vec3(0.3f, 0.3f, 0.3f);
+    day.diffuse = glm::vec3(0.8f, 0.8f, 0.8f);
+    day.specular = glm::vec3(1.0f, 1.0f, 1.0f);
+    day.direction = glm::normalize(glm::vec3(1.0f, 0.0f, 1.0f));
 
-    vece.diffuse = glm::vec3(1, 0.447, 0.2);
-    vece.ambient = glm::vec3(0.2,0.2,0.2);
-    vece.specular = glm::vec3(0.5,0.5,0.5);
-    vece.direction = glm::normalize(glm::vec3(-1,1,-1));
+    dusk.diffuse = glm::vec3(1, 0.447, 0.2);
+    dusk.ambient = glm::vec3(0.2,0.2,0.2);
+    dusk.specular = glm::vec3(0.5,0.5,0.5);
+    dusk.direction = glm::normalize(glm::vec3(-1,1,-1));
 
-    noc.diffuse = glm::vec3(0.1,0.1,0.1);
-    noc.ambient = glm::vec3(0.1,0.1,0.1);
-    noc.specular = glm::vec3(0.1,0.1,0.1);
-    noc.direction = glm::normalize(glm::vec3(-1,1,-1));
+    night.diffuse = glm::vec3(0.1,0.1,0.1);
+    night.ambient = glm::vec3(0.1,0.1,0.1);
+    night.specular = glm::vec3(0.1,0.1,0.1);
+    night.direction = glm::normalize(glm::vec3(-1,1,-1));
 
-    std::vector<DirLight> dirLights = {dan, vece, noc};
+    std::vector<DirLight> dirLights = { day, dusk, night };
 
     // draw in wireframe
     //glPolygonMode(GL_FRONT_AND_BACK, GL_LINE)
@@ -234,8 +236,12 @@ int main() {
         ufo.setup(programState->camera.Position, projection, view, pointLight, dirLights[dayTime], currentFrame);
         ufo.draw();
 
-        lightUfo.setup(programState->camera.Position, projection, view, pointLight, dirLights[dayTime], currentFrame);
-        lightUfo.draw();
+        for (int i = 0; i < NUMUFOS; i++) {
+            lightUfos[i].setup(programState->camera.Position, projection, view, pointLight, dirLights[dayTime], currentFrame);
+            lightUfos[i].draw();
+        }
+
+
 
         terrain.setup(projection, view, programState->camera.Position, dirLights[dayTime]);
         terrain.draw();

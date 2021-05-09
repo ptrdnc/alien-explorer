@@ -14,6 +14,8 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#define NUMUFOS 3
+#define UFORADIUS (15.0f)
 class LightUfo {
 public:
 
@@ -49,7 +51,7 @@ public:
         ufoShader.setVec3("dirLight.specular", dirLight.specular);
         ufoShader.setVec3("dirLight.direction", dirLight.direction);
 
-        currentFrame = 0;
+        currentFrame += initialAngle;
         pointLight.position = glm::vec3(radius * cos(currentFrame), height, radius * sin(currentFrame));
         ufoShader.setVec3("pointLight.position", pointLight.position);
         ufoShader.setVec3("pointLight.ambient", pointLight.ambient);
