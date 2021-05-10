@@ -206,8 +206,8 @@ int main() {
     SpotLight spotLightFull = {
             .position = ufo.ufoPosition,
             .direction = glm::vec3(0.0, -1.0, 0.0),
-            .cutOff = glm::cos(glm::radians(0.8f)),
-            .outerCutOff = glm::cos(glm::radians(1.0f)),
+            .cutOff = glm::cos(glm::radians(10.0f)),
+            .outerCutOff = glm::cos(glm::radians(12.0f)),
             .constant = 1.0f,
             .linear = 0.09f,
             .quadratic = 0.032f,
@@ -237,6 +237,9 @@ int main() {
 
     // render loop
     // -----------
+
+    float r = 0.1;
+
     while (!glfwWindowShouldClose(window)) {
         // per-frame time logic
 
@@ -265,6 +268,7 @@ int main() {
             spotLight = spotLightDimmed;
 
         spotLight.position = ufo.ufoPosition;
+        spotLight.direction = glm::vec3(r * cos(currentFrame), -1.0, r * sin(currentFrame));
 
         city.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
         city.draw();

@@ -18,6 +18,7 @@ in VS_OUT {
     vec3 TangentSpotLightPosition;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
+    mat3 TBN;
 } fs_in;
 
 struct DirLight {
@@ -56,7 +57,6 @@ uniform Material material;
 uniform DirLight dirLight;
 uniform PointLight pointLights[NUM_LIGHT_UFOS];
 uniform SpotLight spotLight;
-
 vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
     vec3 lightDir = normalize(light.position - fragPos);
@@ -81,7 +81,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 
 vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
     //vec3 lightDir = normalize(-dirLight.direction);
-    vec3 lightDir = normalize(-fs_in.TangentDirLightDir);
+    vec3 lightDir = normalize(-light.direction);
     float diff = max(dot(normal, lightDir), 0.0);
     vec3 reflectDir = reflect(-lightDir, normal);
     float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
@@ -96,7 +96,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 
 vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
 {
-    vec3 lightDir = normalize(-fs_in.TangentSpotLightDir);
+    vec3 lightDir = normalize(light.position - fragPos);
     // diffuse shading
     float diff = max(dot(normal, lightDir), 0.0);
     // specular shading
@@ -106,7 +106,7 @@ vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
     float distance = length(light.position - fragPos);
     float attenuation = 1.0 / (light.constant + light.linear * distance + light.quadratic * (distance * distance));
     // spotlight intensity
-    float theta = dot(lightDir, normalize(-fs_in.TangentSpotLightDir));
+    float theta = dot(lightDir, normalize(-light.direction));
     float epsilon = light.cutOff - light.outerCutOff;
     float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
     // combine results
@@ -123,13 +123,13 @@ void main()
 
     vec3 normal = texture(material.texture_normal1, fs_in.TexCoords).rgb;
     normal = normalize(normal * 2.0 - 1.0);
-
-    vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
+    normal = normalize(fs_in.TBN * normal);
+    vec3 viewDir = normalize(viewPos - fs_in.FragPos);
 
     vec3 result = CalcDirLight(dirLight, normal, viewDir);
     for(int i = 0; i < NUM_LIGHT_UFOS; i++)
-        result += CalcPointLight(pointLights[i], normal, fs_in.TangentFragPos, viewDir);
-    result += CalcSpotLight(spotLight, normal, fs_in.TangentFragPos, viewDir);
+        result += CalcPointLight(pointLights[i], normal, fs_in.FragPos, viewDir);
+    result += CalcSpotLight(spotLight, normal, fs_in.FragPos, viewDir);
 
 
     FragColor = vec4(result, 1.0);

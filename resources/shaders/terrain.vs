@@ -15,6 +15,7 @@ out VS_OUT {
     vec3 TangentSpotLightPosition;
     vec3 TangentViewPos;
     vec3 TangentFragPos;
+    mat3 TBN;
 } vs_out;
 struct DirLight {
     vec3 direction;
@@ -67,12 +68,9 @@ void main()
     T = normalize(T - dot(T, N) * N);
     vec3 B = cross(N, T);
 
-    mat3 TBN = transpose(mat3(T, B, N));
-    vs_out.TangentDirLightDir = TBN * dirLight.direction;
-    vs_out.TangentViewPos = TBN * viewPos;
-    vs_out.TangentFragPos = TBN * vs_out.FragPos;
-    vs_out.TangentSpotLightDir = TBN * spotLight.direction;
-    vs_out.TangentSpotLightPosition = TBN * spotLight.position;
+    mat3 TBN = mat3(T, B, N);
+
+    vs_out.TBN = TBN;
     gl_Position = projection * view * model * vec4(aPos, 1.0);
 
 }
