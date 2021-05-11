@@ -17,27 +17,16 @@
 
 class Terrain {
 public:
-//    float vertices[20] = {
-//            // positions            // texture coords
-//             0.5f,  0.5f, 0.0f,     1.0f, 1.0f, // top right
-//             0.5f, -0.5f, 0.0f,     1.0f, 0.0f, // bottom right
-//            -0.5f, -0.5f, 0.0f,     0.0f, 0.0f, // bottom left
-//            -0.5f,  0.5f, 0.0f,     0.0f, 1.0f  // top left
-//    };
-//    unsigned int indices[6] = {
-//            0, 1, 3,
-//            1, 2, 3
-//    };
-//    unsigned int VAO, VBO, EBO;
-
 
     unsigned int diffuseMap;
     unsigned int specularMap;
     unsigned int normalMap;
+    unsigned int dispMap;
     unsigned int shininess = 1;
     float expand = 1.0f;
     float tex = 1.0f;
     Shader terrainShader;
+    float heightScale = 0.1f;
     glm::mat4 model = glm::mat4(1.0f);
 
 
@@ -68,18 +57,19 @@ public:
         diffuseMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture.jpg");
         specularMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture_SPECULAR.jpg");
         normalMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture_NORMAL.jpg");
-
+        dispMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture_DISP.jpg");
 
 
         terrainShader.use();
         terrainShader.setInt("material.texture_diffuse1", GL_TEXTURE0);
         terrainShader.setInt("material.texture_specular1", GL_TEXTURE1);
         terrainShader.setInt("material.texture_normal1", GL_TEXTURE2);
+        terrainShader.setInt("material.texture_disp1", GL_TEXTURE3);
         renderQuad();
 
 
     }
-    void setup(glm::mat4 projection, glm::mat4 view, glm::vec3 viewPosition, PointLight* pointLights, DirLight dirLight, SpotLight spotLight)
+    void setup(glm::mat4& projection, glm::mat4& view, glm::vec3& viewPosition, PointLight* pointLights, DirLight& dirLight, SpotLight& spotLight)
     {
         terrainShader.use();
         terrainShader.setMat4("projection", projection);
@@ -114,7 +104,7 @@ public:
         terrainShader.setFloat("spotLight.cutOff", spotLight.cutOff);
         terrainShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
-
+        terrainShader.setFloat("heightScale", heightScale);
 
     }
     void draw()

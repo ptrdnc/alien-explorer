@@ -28,7 +28,7 @@ City()
 
 }
 void setup(glm::vec3& viewPosition, glm::mat4& projection, glm::mat4& view,
-            PointLight* pointLights, DirLight& dirLight, SpotLight& spotLight, float currentFrame)
+            PointLight* pointLights, DirLight& dirLight, SpotLight& spotLight)
 {
 
     cityShader.use();

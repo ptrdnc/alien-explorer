@@ -243,7 +243,6 @@ int main() {
     while (!glfwWindowShouldClose(window)) {
         // per-frame time logic
 
-
         // --------------------
         float currentFrame = glfwGetTime();
         deltaTime = currentFrame - lastFrame;
@@ -267,14 +266,15 @@ int main() {
         else
             spotLight = spotLightDimmed;
 
-        spotLight.position = ufo.ufoPosition;
+        spotLight.position = ufo.ufoPosition; //+ glm::vec3(0.0, 0.15, 0.0);
         spotLight.direction = glm::vec3(r * cos(currentFrame), -1.0, r * sin(currentFrame));
 
-        city.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
+        ufo.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight);
+        ufo.draw();
+
+        city.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight);
         city.draw();
 
-        ufo.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
-        ufo.draw();
 
         for (int i = 0; i < NUM_LIGHT_UFOS; i++) {
             lightUfos[i].setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight, currentFrame);
@@ -283,13 +283,11 @@ int main() {
             pointLights[i].position = lightUfos[i].position;
         }
 
-
         terrain.setup(projection, view, programState->camera.Position, pointLights, dirLights[dayTime], spotLight);
         terrain.draw();
 
         sky.setup(dayTime);
         sky.draw(projection, view);
-
 
         /*if (programState->ImGuiEnabled)
             DrawImGui(programState);
@@ -331,7 +329,6 @@ void processInput(GLFWwindow *window) {
 
     if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS)
         spotLightOn = true;
-
     if (glfwGetKey(window, GLFW_KEY_Q) == GLFW_PRESS)
         spotLightOn = false;
 
