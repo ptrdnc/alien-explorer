@@ -19,6 +19,8 @@ Shader cityShader;
 float cityScale = 0.01f;
 glm::vec3 cityPosition = glm::vec3(0.0f);
 glm::mat4 model = glm::mat4(1.0f);
+
+    //"resources/objects/futuristic/wild town/wild town.obj"
 City()
     : cityModel("resources/objects/futuristic/wild town/wild town.obj"),
       cityShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs")

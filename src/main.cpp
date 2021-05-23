@@ -266,7 +266,7 @@ int main() {
         else
             spotLight = spotLightDimmed;
 
-        spotLight.position = ufo.ufoPosition; //+ glm::vec3(0.0, 0.15, 0.0);
+        spotLight.position = ufo.ufoPosition; //+ glm::vec3(0.0, 0.5, 0.0);
         spotLight.direction = glm::vec3(r * cos(currentFrame), -1.0, r * sin(currentFrame));
 
         ufo.setup(programState->camera.Position, projection, view, pointLights, dirLights[dayTime], spotLight);

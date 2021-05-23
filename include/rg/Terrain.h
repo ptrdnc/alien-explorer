@@ -46,13 +46,11 @@ public:
         glm::vec3 tinyPush = glm::vec3(0.0, 0.0, 0.1);
         model = glm::translate(model, tinyPush);
 
-//        diffuseMap = loadTexture("resources/textures/grass/Green-Terrain-Ground-Texture-DIFFUSE.jpg");
-//        specularMap = loadTexture("resources/textures/grass/Green-Terrain-Ground-Texture-SPECULAR.jpg");
-//        normalMap = loadTexture("resources/textures/grass/Green-Terrain-Ground-Texture-NORMAL.jpg");
+//        diffuseMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-DIFFUSE.jpg");
+//        specularMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-SPECULAR.jpg");
+//        normalMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-NORMAL.jpg");
+//        dispMap = loadTexture("resources/textures/grass/Green-Grass-Ground-Texture-DISP.jpg");
 
-//        diffuseMap = loadTexture("resources/textures/asphalt/Tileable_Asphalt_Texture.jpg");
-//        specularMap = loadTexture("resources/textures/asphalt/Tileable_Asphalt_Texture_SPECULAR.jpg");
-//        normalMap = loadTexture("resources/textures/asphalt/Tileable_Asphalt_Texture_NORMAL.jpg");
 
         diffuseMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture.jpg");
         specularMap = loadTexture("resources/textures/sand/Seamless_cracked_sand_ground_texture_SPECULAR.jpg");
@@ -118,10 +116,6 @@ public:
         glActiveTexture(GL_TEXTURE2);
         glBindTexture(GL_TEXTURE_2D, normalMap);
 
-//        glBindVertexArray(VAO);
-//        glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-//        glBindVertexArray(0);
-
         glBindVertexArray(quadVAO);
         glDrawArrays(GL_TRIANGLES, 0, 6);
         glBindVertexArray(0);
@@ -155,7 +149,6 @@ public:
 //            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, format == GL_RGBA ? GL_CLAMP_TO_EDGE : GL_REPEAT);
 //            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
 //            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 
         } else {
             ASSERT(false, "Failed to load texture image");
@@ -237,6 +230,12 @@ public:
             };
 
             int j;
+
+
+
+
+            //AAAAAAAAAAAAA
+
             for (int i = 0; i < 84; i += 14) {
                 for (int j = 0; j < 3; j++)
                     quadVertices[i+j] *= expand;

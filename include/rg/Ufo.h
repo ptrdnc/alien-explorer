@@ -19,7 +19,7 @@ public:
     float ufoScale = 0.005f;
     glm::vec3 ufoOffset = glm::vec3(0.0f, -0.25f, 0.0f);
     glm::mat4 model = glm::mat4(1.0f);
-    glm::vec3 ufoPosition = glm::vec3(0.0f, 0.0f, 0.0f);
+    glm::vec3 ufoPosition;
     Ufo()
             : ufoModel("resources/objects/ufo/scene.gltf"),
               ufoShader("resources/shaders/2.model_lighting.vs", "resources/shaders/2.model_lighting.fs")
