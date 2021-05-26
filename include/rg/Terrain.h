@@ -22,7 +22,7 @@ public:
     unsigned int specularMap;
     unsigned int normalMap;
     unsigned int dispMap;
-    unsigned int shininess = 1;
+    unsigned int shininess = 2;
     float expand = 1.0f;
     float tex = 1.0f;
     Shader terrainShader;
