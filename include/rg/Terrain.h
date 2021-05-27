@@ -26,7 +26,7 @@ public:
     float expand = 1.0f;
     float tex = 1.0f;
     Shader terrainShader;
-    float heightScale = 0.1f;
+    float heightScale = 0.03f;
     glm::mat4 model = glm::mat4(1.0f);
 
 
@@ -103,7 +103,7 @@ public:
         terrainShader.setFloat("spotLight.outerCutOff", spotLight.outerCutOff);
 
         terrainShader.setFloat("heightScale", heightScale);
-
+        terrainShader.setFloat("tex", tex);
     }
     void draw()
     {

@@ -60,12 +60,12 @@ uniform DirLight dirLight;
 uniform PointLight pointLights[NUM_LIGHT_UFOS];
 uniform SpotLight spotLight;
 uniform float heightScale;
+uniform float tex;
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, int index);
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir);
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir);
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, int index, vec2 texCoords);
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec2 texCoords);
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec2 texCoords);
 vec2 ParallaxMapping(vec2 texCoords, vec3 viewDir);
-vec2 texCoords;
 void main()
 {
 
@@ -83,21 +83,25 @@ void main()
 //     FragColor = vec4(result, 1.0);
 
     vec3 viewDir = normalize(fs_in.TangentViewPos - fs_in.TangentFragPos);
-    texCoords = fs_in.TexCoords;
+    vec2 texCoords = fs_in.TexCoords;
 
     texCoords = ParallaxMapping(fs_in.TexCoords, viewDir);
+    if(texCoords.x/tex > 1.0 || texCoords.y/tex > 1.0 || texCoords.x/tex < 0.0 || texCoords.y/tex < 0.0)
+        discard;
+
+
     vec3 normal = texture(material.texture_normal1, fs_in.TexCoords).rgb;
     normal = normalize(normal * 2.0 - 1.0);
 
-    vec3 result = CalcDirLight(dirLight, normal, viewDir);
+    vec3 result = CalcDirLight(dirLight, normal, viewDir, texCoords);
     for(int i = 0; i < NUM_LIGHT_UFOS; i++)
-        result += CalcPointLight(pointLights[i], normal, fs_in.TangentFragPos, viewDir, i);
-    result += CalcSpotLight(spotLight, normal, fs_in.TangentFragPos, viewDir);
+        result += CalcPointLight(pointLights[i], normal, fs_in.TangentFragPos, viewDir, i, texCoords);
+    result += CalcSpotLight(spotLight, normal, fs_in.TangentFragPos, viewDir, texCoords);
 
     FragColor = vec4(result, 1.0);
 }
 
-vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, int index)
+vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, int index, vec2 texCoords)
 {
     vec3 lightDir = normalize(fs_in.TangentPointLightPositions[index] - fragPos);
     float diff = max(dot(normal, lightDir), 0.0);
@@ -118,7 +122,7 @@ vec3 CalcPointLight(PointLight light, vec3 normal, vec3 fragPos, vec3 viewDir, i
 }
 
 
-vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
+vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir, vec2 texCoords) {
     //vec3 lightDir = normalize(-light.direction);
     vec3 lightDir = fs_in.TangentDirLightDir;
     float diff = max(dot(normal, lightDir), 0.0);
@@ -133,7 +137,7 @@ vec3 CalcDirLight(DirLight light, vec3 normal, vec3 viewDir) {
 
 }
 
-vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir)
+vec3 CalcSpotLight(SpotLight light, vec3 normal, vec3 fragPos, vec3 viewDir, vec2 texCoords)
 {
     //vec3 lightDir = normalize(light.position - fragPos);
     vec3 lightDir = normalize(fs_in.TangentSpotLightPosition - fragPos);
